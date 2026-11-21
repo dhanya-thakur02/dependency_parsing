@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dependency Parsing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+    <div class="tags">
+        <span class="badge">NLP SERIES</span>
+        <span class="category">SYNTACTIC PROCESSING</span>
+    </div>
+
+    <h1>Dependency Parsing</h1>
+    <p>
+        Learn how a sentence is described by links between words: each word depends on a head, and each link has a label such as subject or object. Read the three short explanations, try the warm-up, then complete the 10 tasks (match the column, select all that apply, multiple choice, and click the right word), which go from easy to hard.
+    </p>
+</header>
+
+<main>
+
+    <!-- ===== LEARN 1: HEADS AND DEPENDENTS ===== -->
+    <section class="section">
+        <p class="section-label">LEARN: HEADS AND DEPENDENTS</p>
+        <div class="concept-card learn-card">
+            <h2>Dependency parsing links words to words</h2>
+            <p>
+                In <strong>dependency parsing</strong>, every word (except one) depends on another word, called its <strong>head</strong>.
+                We draw an arc from the <strong>head</strong> to the word that depends on it, the <strong>dependent</strong>,
+                and write a label on the arc that says how they are related.
+            </p>
+
+            <div class="tree-wrap" data-dep="{&quot;words&quot;: [&quot;the&quot;, &quot;dog&quot;, &quot;chased&quot;, &quot;the&quot;, &quot;cat&quot;], &quot;arcs&quot;: [[1, 0, &quot;det&quot;], [2, 1, &quot;nsubj&quot;], [4, 3, &quot;det&quot;], [2, 4, &quot;dobj&quot;]], &quot;root&quot;: 2}" aria-label="Dependency diagram of the dog chased the cat"></div>
+
+            <ol class="steps">
+                <li>Read "chased → dog (nsubj)" as: <b>dog</b> is the <b>subject</b> of <b>chased</b>.</li>
+                <li>The <b>ROOT</b> is the main word, usually the main verb. It depends on nothing, and the whole sentence hangs from it.</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- ===== LEARN 2: RELATIONS ===== -->
+    <section class="section">
+        <p class="section-label">LEARN: RELATION LABELS</p>
+        <div class="concept-card learn-card">
+            <h2>The label tells you the job of each link</h2>
+            <p>These are the labels you will meet most often:</p>
+
+            <div class="tagkey">
+                <span><b>nsubj</b> subject: cat in "cat ate"</span>
+                <span><b>dobj</b> direct object: fish in "ate fish"</span>
+                <span><b>det</b> determiner: the, a</span>
+                <span><b>amod</b> adjective: hungry</span>
+                <span><b>advmod</b> adverb: quickly</span>
+                <span><b>prep / pobj</b> preposition and its object</span>
+            </div>
+
+            <div class="tree-wrap" data-dep="{&quot;words&quot;: [&quot;the&quot;, &quot;hungry&quot;, &quot;cat&quot;, &quot;quickly&quot;, &quot;ate&quot;, &quot;a&quot;, &quot;fish&quot;], &quot;arcs&quot;: [[2, 0, &quot;det&quot;], [2, 1, &quot;amod&quot;], [4, 2, &quot;nsubj&quot;], [4, 3, &quot;advmod&quot;], [4, 6, &quot;dobj&quot;], [6, 5, &quot;det&quot;]], &quot;root&quot;: 4}" aria-label="Dependency diagram of the hungry cat quickly ate a fish"></div>
+
+            <p class="tip">
+                <strong>Tip:</strong> these names follow the style used by spaCy. Other toolkits, such as Universal Dependencies, use slightly different names
+                (for example <em>obj</em> instead of <em>dobj</em>), but the idea is the same.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== LEARN 3: RULES + COMPARE ===== -->
+    <section class="section">
+        <p class="section-label">LEARN: RULES OF THE TREE</p>
+        <div class="concept-card learn-card">
+            <h2>Every dependency tree follows three rules</h2>
+            <ol class="steps">
+                <li>There is exactly <b>one ROOT</b> word.</li>
+                <li>Every other word has <b>exactly one head</b>.</li>
+                <li>A head can have <b>many dependents</b> (in the example above, <em>ate</em> has three).</li>
+            </ol>
+
+            <h3 class="learn-sub">How is it different from a constituency parse?</h3>
+            <div class="part-grid">
+                <div class="part part-n"><div class="pname">Constituency</div><div class="pex">NP, VP, S</div><p>Groups words into nested phrases. The tree has phrase labels as extra nodes.</p></div>
+                <div class="part part-t"><div class="pname">Dependency</div><div class="pex">nsubj, dobj, det</div><p>Links words directly. There are no phrase nodes, only words and labelled arcs.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <p class="section-label">WARM-UP</p>
+        <div class="concept-card interactive-card">
+            <h2>Click the words that depend on the verb</h2>
+            <p>
+                In "the dog chased the cat", the verb <strong>chased</strong> is the ROOT. Click the two words that depend <strong>directly</strong> on it, then check your selection. Click a selected word again to deselect it.
+            </p>
+
+            <div class="sentence-selector" id="practiceSentence"></div>
+            <div class="selection-legend">
+                <span><i class="legend-dot selected-dot"></i> Selected</span>
+                <span><i class="legend-dot content-dot"></i> Not selected</span>
+            </div>
+            <button onclick="checkPractice()">Check Selection</button>
+            <div id="practiceFeedback" class="feedback"></div>
+            <div id="practiceResult" class="practice-result"></div>
+        </div>
+    </section>
+
+    <section class="section">
+        <p class="section-label">YOUR TASK</p>
+        <div class="concept-card task-card">
+            <div class="task-header">
+                <div>
+                    <h2>Dependency Parsing Challenge</h2>
+                    <p class="task-instruction" id="questionInstruction"></p>
+                </div>
+                <div class="question-counter">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></div>
+            </div>
+
+            <div class="level-key">
+                <span><i style="background:#2e9d5b"></i>Easy</span>
+                <span><i style="background:#d08a1f"></i>Medium</span>
+                <span><i style="background:#d6455a"></i>Hard</span>
+            </div>
+            <div class="progress-strip" id="progressStrip" role="group" aria-label="Jump to a question"></div>
+
+            <div class="question-box" id="questionBox"></div>
+            <div id="taskArea"></div>
+            <div class="selection-status" id="selectionStatus"></div>
+
+            <button onclick="checkAnswer()" id="checkButton">Check Answer</button>
+            <div id="feedback" class="feedback"></div>
+            <div id="explainBox" class="explain-box"></div>
+
+            <div class="question-navigation">
+                <button onclick="previousQuestion()" id="previousButton" class="navigation-button previous-button">← Previous</button>
+                <button onclick="nextQuestion()" id="nextButton" class="navigation-button next-button">Next →</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
